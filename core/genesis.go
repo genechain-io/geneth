@@ -154,7 +154,7 @@ func (e *GenesisMismatchError) Error() string {
 // The returned chain configuration is never nil.
 func SetupGenesisBlock(db ethdb.Database, genesis *Genesis) (*params.ChainConfig, common.Hash, error) {
 	if genesis != nil && genesis.Config == nil {
-		return params.AllEthashProtocolChanges, common.Hash{}, errGenesisNoConfig
+		return params.AllRiboseProtocolChanges, common.Hash{}, errGenesisNoConfig
 	}
 	// Just commit the new block if there is no stored genesis block.
 	stored := rawdb.ReadCanonicalHash(db, 0)
@@ -235,6 +235,10 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 	switch {
 	case g != nil:
 		return g.Config
+	case ghash == params.GenenetGenesisHash:
+		return params.GeneChainConfig
+	case ghash == params.AdenineGenesisHash:
+		return params.AdenineChainConfig
 	case ghash == params.MainnetGenesisHash:
 		return params.MainnetChainConfig
 	case ghash == params.RopstenGenesisHash:
@@ -246,7 +250,7 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 	case ghash == params.YoloV2GenesisHash:
 		return params.YoloV2ChainConfig
 	default:
-		return params.AllEthashProtocolChanges
+		return params.AllRiboseProtocolChanges
 	}
 }
 
@@ -300,7 +304,7 @@ func (g *Genesis) Commit(db ethdb.Database) (*types.Block, error) {
 	}
 	config := g.Config
 	if config == nil {
-		config = params.AllEthashProtocolChanges
+		config = params.AllRiboseProtocolChanges
 	}
 	if err := config.CheckConfigForkOrder(); err != nil {
 		return nil, err
@@ -330,6 +334,32 @@ func (g *Genesis) MustCommit(db ethdb.Database) *types.Block {
 func GenesisBlockForTesting(db ethdb.Database, addr common.Address, balance *big.Int) *types.Block {
 	g := Genesis{Alloc: GenesisAlloc{addr: {Balance: balance}}}
 	return g.MustCommit(db)
+}
+
+// GenenetGenesisBlock returns the Ethereum main net genesis block.
+func GenenetGenesisBlock() *Genesis {
+	return &Genesis{
+		Config:     params.GeneChainConfig,
+		Nonce:      0,
+		Timestamp:  0x0,
+		ExtraData:  hexutil.MustDecode("0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),
+		GasLimit:   0x280de80,
+		Difficulty: big.NewInt(1),
+		// Alloc:      decodePreallocWithCode(genenetAllocData),
+	}
+}
+
+// DefaultAdenineGenesisBlock returns the Adenine network genesis block.
+func DefaultAdenineGenesisBlock() *Genesis {
+	return &Genesis{
+		Config:     params.AdenineChainConfig,
+		Nonce:      0x07a8,
+		Timestamp:  0x607cf9e4,
+		ExtraData:  hexutil.MustDecode("0x0000000000000000000000000000000000000000000000000000000000000000f813D807c97F95f62B2efE6658041554cA09BCA450295ec0DA76E1696b73628858d09f8778dee31d86b7c9D71fE527832E86D2e0262f425030C14C26199e86fAC8FfB34F9f2904Faa89050331e6FDE1b8E4318F35917E2e67EbD1e15f64366f5641565910000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),
+		GasLimit:   0x280de80,
+		Difficulty: big.NewInt(1),
+		Alloc:      decodePreallocWithCode(adenineAllocData),
+	}
 }
 
 // DefaultGenesisBlock returns the Ethereum main net genesis block.
@@ -427,6 +457,21 @@ func decodePrealloc(data string) GenesisAlloc {
 	ga := make(GenesisAlloc, len(p))
 	for _, account := range p {
 		ga[common.BigToAddress(account.Addr)] = GenesisAccount{Balance: account.Balance}
+	}
+	return ga
+}
+
+func decodePreallocWithCode(data string) GenesisAlloc {
+	var p []struct {
+		Addr, Balance *big.Int
+		Code          []byte
+	}
+	if err := rlp.NewStream(strings.NewReader(data), 0).Decode(&p); err != nil {
+		panic(err)
+	}
+	ga := make(GenesisAlloc, len(p))
+	for _, account := range p {
+		ga[common.BigToAddress(account.Addr)] = GenesisAccount{Balance: account.Balance, Code: account.Code}
 	}
 	return ga
 }

@@ -39,6 +39,14 @@ func TestDefaultGenesisBlock(t *testing.T) {
 	if block.Hash() != params.RopstenGenesisHash {
 		t.Errorf("wrong ropsten genesis hash, got %v, want %v", block.Hash(), params.RopstenGenesisHash)
 	}
+	block = GenenetGenesisBlock().ToBlock(nil)
+	if block.Hash() != params.GenenetGenesisHash {
+		t.Errorf("wrong genenet genesis hash, got %v, want %v", block.Hash(), params.GenenetGenesisHash)
+	}
+	block = DefaultAdenineGenesisBlock().ToBlock(nil)
+	if block.Hash() != params.AdenineGenesisHash {
+		t.Errorf("wrong adenine genesis hash, got %v, want %v", block.Hash(), params.AdenineGenesisHash)
+	}
 }
 
 func TestSetupGenesis(t *testing.T) {
@@ -66,7 +74,7 @@ func TestSetupGenesis(t *testing.T) {
 				return SetupGenesisBlock(db, new(Genesis))
 			},
 			wantErr:    errGenesisNoConfig,
-			wantConfig: params.AllEthashProtocolChanges,
+			wantConfig: params.AllRiboseProtocolChanges,
 		},
 		{
 			name: "no block in DB, genesis == nil",
@@ -75,6 +83,25 @@ func TestSetupGenesis(t *testing.T) {
 			},
 			wantHash:   params.MainnetGenesisHash,
 			wantConfig: params.MainnetChainConfig,
+		},
+		{
+			name: "genenet block in DB, genesis == nil",
+			fn: func(db ethdb.Database) (*params.ChainConfig, common.Hash, error) {
+				GenenetGenesisBlock().MustCommit(db)
+				return SetupGenesisBlock(db, nil)
+			},
+			wantHash:   params.GenenetGenesisHash,
+			wantConfig: params.GeneChainConfig,
+		},
+		{
+			name: "custom block in DB, genesis == adenine",
+			fn: func(db ethdb.Database) (*params.ChainConfig, common.Hash, error) {
+				customg.MustCommit(db)
+				return SetupGenesisBlock(db, DefaultAdenineGenesisBlock())
+			},
+			wantErr:    &GenesisMismatchError{Stored: customghash, New: params.AdenineGenesisHash},
+			wantHash:   params.AdenineGenesisHash,
+			wantConfig: params.AdenineChainConfig,
 		},
 		{
 			name: "mainnet block in DB, genesis == nil",

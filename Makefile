@@ -12,6 +12,16 @@ GOBIN = ./build/bin
 GO ?= latest
 GORUN = env GO111MODULE=on go run
 
+geneth: 
+	$(GORUN) build/ci.go install ./cmd/geth
+	cp $(GOBIN)/geth $(GOBIN)/geneth
+	@echo "Done building."
+	@echo "Run \"$(GOBIN)/geneth\" to launch geneth."
+
+geneth-all:
+	$(GORUN) build/ci.go install
+	cp $(GOBIN)/geth $(GOBIN)/geneth
+
 geth:
 	$(GORUN) build/ci.go install ./cmd/geth
 	@echo "Done building."

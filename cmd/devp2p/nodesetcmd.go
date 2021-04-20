@@ -158,6 +158,10 @@ func minAgeFilter(args []string) (nodeFilter, error) {
 func ethFilter(args []string) (nodeFilter, error) {
 	var filter forkid.Filter
 	switch args[0] {
+	case "genenet":
+		filter = forkid.NewStaticFilter(params.GeneChainConfig, params.MainnetGenesisHash)
+	case "adenine":
+		filter = forkid.NewStaticFilter(params.AdenineChainConfig, params.AdenineGenesisHash)
 	case "mainnet":
 		filter = forkid.NewStaticFilter(params.MainnetChainConfig, params.MainnetGenesisHash)
 	case "rinkeby":

@@ -38,6 +38,7 @@ func TestCreation(t *testing.T) {
 		genesis common.Hash
 		cases   []testcase
 	}{
+		// @TODO: Genenet test cases
 		// Mainnet test cases
 		{
 			params.MainnetChainConfig,
