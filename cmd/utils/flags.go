@@ -140,6 +140,10 @@ var (
 		Name:  "adenine",
 		Usage: "Adenine network: pre-configured DPoS test network.",
 	}
+	CytosineFlag = cli.BoolFlag{
+		Name:  "cytosine",
+		Usage: "Cytosine network: pre-configured DPoS test network.",
+	}
 	MainnetFlag = cli.BoolFlag{
 		Name:  "mainnet",
 		Usage: "Ethereum mainnet",
@@ -749,6 +753,9 @@ func MakeDataDir(ctx *cli.Context) string {
 		if ctx.GlobalBool(AdenineFlag.Name) {
 			return filepath.Join(path, "adenine")
 		}
+		if ctx.GlobalBool(CytosineFlag.Name) {
+			return filepath.Join(path, "cytosine")
+		}
 		if ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name) {
 			// Maintain compatibility with older Geth configurations storing the
 			// Ropsten database in `testnet` instead of `ropsten`.
@@ -819,6 +826,8 @@ func setBootstrapNodes(ctx *cli.Context, cfg *p2p.Config) {
 		}
 	case ctx.GlobalBool(AdenineFlag.Name):
 		urls = params.AdenineBootnodes
+	case ctx.GlobalBool(CytosineFlag.Name):
+		urls = params.CytosineBootnodes
 	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
 		urls = params.RopstenBootnodes
 	case ctx.GlobalBool(RinkebyFlag.Name):
@@ -1279,6 +1288,8 @@ func setDataDir(ctx *cli.Context, cfg *node.Config) {
 		cfg.DataDir = "" // unless explicitly requested, use memory databases
 	case ctx.GlobalBool(AdenineFlag.Name) && cfg.DataDir == node.DefaultDataDir():
 		cfg.DataDir = filepath.Join(node.DefaultDataDir(), "adenine")
+	case ctx.GlobalBool(CytosineFlag.Name) && cfg.DataDir == node.DefaultDataDir():
+		cfg.DataDir = filepath.Join(node.DefaultDataDir(), "cytosine")
 	case (ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name)) && cfg.DataDir == node.DefaultDataDir():
 		// Maintain compatibility with older Geth configurations storing the
 		// Ropsten database in `testnet` instead of `ropsten`.
@@ -1507,7 +1518,7 @@ func SetShhConfig(ctx *cli.Context, stack *node.Node) {
 // SetEthConfig applies eth-related command line flags to the config.
 func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
 	// Avoid conflicting network flags
-	CheckExclusive(ctx, GenenetFlag, AdenineFlag, MainnetFlag, DeveloperFlag, LegacyTestnetFlag, RopstenFlag, RinkebyFlag, GoerliFlag, YoloV2Flag)
+	CheckExclusive(ctx, GenenetFlag, AdenineFlag, CytosineFlag, MainnetFlag, DeveloperFlag, LegacyTestnetFlag, RopstenFlag, RinkebyFlag, GoerliFlag, YoloV2Flag)
 	CheckExclusive(ctx, LegacyLightServFlag, LightServeFlag, SyncModeFlag, "light")
 	CheckExclusive(ctx, DeveloperFlag, ExternalSignerFlag) // Can't use both ephemeral unlocked and external signer
 	CheckExclusive(ctx, GCModeFlag, "archive", TxLookupLimitFlag)
@@ -1629,6 +1640,12 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *eth.Config) {
 		}
 		cfg.Genesis = core.DefaultAdenineGenesisBlock()
 		SetDNSDiscoveryDefaults(cfg, params.AdenineGenesisHash)
+	case ctx.GlobalBool(CytosineFlag.Name):
+		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
+			cfg.NetworkId = params.CytosineChainConfig.ChainID.Uint64()
+		}
+		cfg.Genesis = core.DefaultCytosineGenesisBlock()
+		SetDNSDiscoveryDefaults(cfg, params.CytosineGenesisHash)
 	case ctx.GlobalBool(MainnetFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
 			cfg.NetworkId = 1
@@ -1841,6 +1858,8 @@ func MakeGenesis(ctx *cli.Context) *core.Genesis {
 	switch {
 	case ctx.GlobalBool(AdenineFlag.Name):
 		genesis = core.DefaultAdenineGenesisBlock()
+	case ctx.GlobalBool(CytosineFlag.Name):
+		genesis = core.DefaultCytosineGenesisBlock()
 	case ctx.GlobalBool(LegacyTestnetFlag.Name) || ctx.GlobalBool(RopstenFlag.Name):
 		genesis = core.DefaultRopstenGenesisBlock()
 	case ctx.GlobalBool(RinkebyFlag.Name):

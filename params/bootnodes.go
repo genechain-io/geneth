@@ -28,6 +28,9 @@ var AdenineBootnodes = []string{
 	"enode://b84fa3855a4fec46bfb0cff7222d0e8a2f3d8aac3fac5849314b6f28f89361255f1a1b02413842cf364bb36d37c8b7de52dd5b12acebcc6f24810e59ddf314bd@18.139.118.116:30303",
 }
 
+// CytosineBootnodes are the enode URLs of the P2P bootstrap nodes running on the
+var CytosineBootnodes = []string{}
+
 // MainnetBootnodes are the enode URLs of the P2P bootstrap nodes running on
 // the main Ethereum network.
 var MainnetBootnodes = []string{
@@ -96,6 +99,9 @@ func KnownDNSNetwork(genesis common.Hash, protocol string) string {
 		return ""
 	case AdenineGenesisHash:
 		net = "adenine"
+		return ""
+	case CytosineGenesisHash:
+		net = "cytosine"
 		return ""
 	case MainnetGenesisHash:
 		net = "mainnet"

@@ -126,6 +126,9 @@ func remoteConsole(ctx *cli.Context) error {
 			if ctx.GlobalBool(utils.AdenineFlag.Name) {
 				path = filepath.Join(path, "adenine")
 			}
+			if ctx.GlobalBool(utils.CytosineFlag.Name) {
+				path = filepath.Join(path, "cytosine")
+			}
 			if ctx.GlobalBool(utils.LegacyTestnetFlag.Name) || ctx.GlobalBool(utils.RopstenFlag.Name) {
 				// Maintain compatibility with older Geneth configurations storing the
 				// Ropsten database in `testnet` instead of `ropsten`.

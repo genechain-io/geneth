@@ -23,11 +23,6 @@ type UpgradeConfig struct {
 	Networks map[string]*Upgrades
 }
 
-var (
-	//upgrade config
-	AbiesUpgrade = UpgradeConfig{Name: "abies", Networks: map[string]*Upgrades{}}
-)
-
 func UpgradeBuildInSystemContract(config *params.ChainConfig, blockNumber *big.Int, statedb *state.StateDB) {
 	if config == nil || blockNumber == nil || statedb == nil {
 		return
@@ -37,6 +32,10 @@ func UpgradeBuildInSystemContract(config *params.ChainConfig, blockNumber *big.I
 
 	if config.IsOnAbies(blockNumber) {
 		applySystemContractUpgrade(AbiesUpgrade.Name, AbiesUpgrade.Networks[config.ChainID.String()], blockNumber, statedb, logger)
+	}
+
+	if config.IsOnBellis(blockNumber) {
+		applySystemContractUpgrade(BellisUpgrade.Name, BellisUpgrade.Networks[config.ChainID.String()], blockNumber, statedb, logger)
 	}
 }
 

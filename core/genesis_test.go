@@ -47,6 +47,10 @@ func TestDefaultGenesisBlock(t *testing.T) {
 	if block.Hash() != params.AdenineGenesisHash {
 		t.Errorf("wrong adenine genesis hash, got %v, want %v", block.Hash(), params.AdenineGenesisHash)
 	}
+	block = DefaultCytosineGenesisBlock().ToBlock(nil)
+	if block.Hash() != params.CytosineGenesisHash {
+		t.Errorf("wrong cytosine genesis hash, got %v, want %v", block.Hash(), params.CytosineGenesisHash)
+	}
 }
 
 func TestSetupGenesis(t *testing.T) {
@@ -102,6 +106,16 @@ func TestSetupGenesis(t *testing.T) {
 			wantErr:    &GenesisMismatchError{Stored: customghash, New: params.AdenineGenesisHash},
 			wantHash:   params.AdenineGenesisHash,
 			wantConfig: params.AdenineChainConfig,
+		},
+		{
+			name: "custom block in DB, genesis == cytosine",
+			fn: func(db ethdb.Database) (*params.ChainConfig, common.Hash, error) {
+				customg.MustCommit(db)
+				return SetupGenesisBlock(db, DefaultCytosineGenesisBlock())
+			},
+			wantErr:    &GenesisMismatchError{Stored: customghash, New: params.CytosineGenesisHash},
+			wantHash:   params.CytosineGenesisHash,
+			wantConfig: params.CytosineChainConfig,
 		},
 		{
 			name: "mainnet block in DB, genesis == nil",

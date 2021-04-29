@@ -27,12 +27,13 @@ import (
 
 // Genesis hashes to enforce below configs on.
 var (
-	GenenetGenesisHash = common.HexToHash("0x1a95e2cb0f789428e062bc78d591cbb51b9d4afeec398c973ccbe8c17df453f4")
-	AdenineGenesisHash = common.HexToHash("0xb47f3c3d4207b72c0cd377486207875cd4cc110911638dc4fd3903ffb3884109")
-	MainnetGenesisHash = common.HexToHash("0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3")
-	RopstenGenesisHash = common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d")
-	RinkebyGenesisHash = common.HexToHash("0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177")
-	GoerliGenesisHash  = common.HexToHash("0xbf7e331f7f7c1dd2e05159666b3bf8bc7a8a3a9eb1d518969eab529dd9b88c1a")
+	GenenetGenesisHash  = common.HexToHash("0x1a95e2cb0f789428e062bc78d591cbb51b9d4afeec398c973ccbe8c17df453f4")
+	AdenineGenesisHash  = common.HexToHash("0xb47f3c3d4207b72c0cd377486207875cd4cc110911638dc4fd3903ffb3884109")
+	CytosineGenesisHash = common.HexToHash("0x6fb683fefd6046cf64a3a668d6aafc387d636a0ba60168f570791baa105b33e0")
+	MainnetGenesisHash  = common.HexToHash("0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3")
+	RopstenGenesisHash  = common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d")
+	RinkebyGenesisHash  = common.HexToHash("0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177")
+	GoerliGenesisHash   = common.HexToHash("0xbf7e331f7f7c1dd2e05159666b3bf8bc7a8a3a9eb1d518969eab529dd9b88c1a")
 	// TODO: update with yolov2 values
 	YoloV2GenesisHash = common.HexToHash("0x498a7239036dd2cd09e2bb8a80922b78632017958c332b42044c250d603a8a3e")
 )
@@ -91,6 +92,29 @@ var (
 		PetersburgBlock:     big.NewInt(0),
 		IstanbulBlock:       big.NewInt(0),
 		MuirGlacierBlock:    big.NewInt(0),
+		AbiesBlock:          big.NewInt(258800),
+
+		Ribose: &RiboseConfig{
+			Period: 3,
+			Epoch:  200,
+		},
+	}
+
+	// CytosineChainConfig contains the chain parameters to run a node on the gene test network.
+	CytosineChainConfig = &ChainConfig{
+		ChainID:             big.NewInt(18080),
+		HomesteadBlock:      big.NewInt(0),
+		DAOForkBlock:        nil,
+		DAOForkSupport:      true,
+		EIP150Block:         big.NewInt(0),
+		EIP155Block:         big.NewInt(0),
+		EIP158Block:         big.NewInt(0),
+		ByzantiumBlock:      big.NewInt(0),
+		ConstantinopleBlock: big.NewInt(0),
+		PetersburgBlock:     big.NewInt(0),
+		IstanbulBlock:       big.NewInt(0),
+		MuirGlacierBlock:    big.NewInt(0),
+		AbiesBlock:          big.NewInt(27000),
 
 		Ribose: &RiboseConfig{
 			Period: 3,
@@ -284,19 +308,19 @@ var (
 	//
 	// This configuration is intentionally not using keyed fields to force anyone
 	// adding flags to the config to also have to set these fields.
-	AllEthashProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, nil, nil, nil, new(EthashConfig), nil, nil}
+	AllEthashProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, nil, nil, nil, nil, new(EthashConfig), nil, nil}
 
 	// AllCliqueProtocolChanges contains every protocol change (EIPs) introduced
 	// and accepted by the Ethereum core developers into the Clique consensus.
 	//
 	// This configuration is intentionally not using keyed fields to force anyone
 	// adding flags to the config to also have to set these fields.
-	AllCliqueProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, nil, nil, nil, nil, &CliqueConfig{Period: 0, Epoch: 30000}, nil}
+	AllCliqueProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, nil, nil, nil, nil, nil, &CliqueConfig{Period: 0, Epoch: 30000}, nil}
 
 	// AllRiboseProtocolChanges copies from AllCliqueProtocolChanges.
-	AllRiboseProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, nil, nil, nil, nil, nil, nil, nil, &RiboseConfig{Period: 0, Epoch: 30000}}
+	AllRiboseProtocolChanges = &ChainConfig{big.NewInt(1337), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, nil, nil, nil, nil, nil, nil, nil, nil, &RiboseConfig{Period: 0, Epoch: 30000}}
 
-	TestChainConfig = &ChainConfig{big.NewInt(1), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, nil, nil, nil, new(EthashConfig), nil, nil}
+	TestChainConfig = &ChainConfig{big.NewInt(1), big.NewInt(0), nil, false, big.NewInt(0), common.Hash{}, big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), big.NewInt(0), nil, nil, nil, nil, nil, new(EthashConfig), nil, nil}
 	TestRules       = TestChainConfig.Rules(new(big.Int))
 )
 
@@ -371,7 +395,8 @@ type ChainConfig struct {
 	YoloV2Block *big.Int `json:"yoloV2Block,omitempty"` // YOLO v2: Gas repricings TODO @holiman add EIP references
 	EWASMBlock  *big.Int `json:"ewasmBlock,omitempty"`  // EWASM switch block (nil = no fork, 0 = already activated)
 
-	AbiesBlock *big.Int `json:"abiesBlock,omitempty"` // Abies switch block (nil = no fork, 0 = already activated)
+	AbiesBlock  *big.Int `json:"abiesBlock,omitempty"`  // Abies switch block (nil = no fork, 0 = already activated)
+	BellisBlock *big.Int `json:"bellisBlock,omitempty"` // Bellis switch block (nil = no fork, 0 = already activated)
 
 	// Various consensus engines
 	Ethash *EthashConfig `json:"ethash,omitempty"`
@@ -421,7 +446,7 @@ func (c *ChainConfig) String() string {
 	default:
 		engine = "unknown"
 	}
-	return fmt.Sprintf("{ChainID: %v Homestead: %v DAO: %v DAOSupport: %v EIP150: %v EIP155: %v EIP158: %v Byzantium: %v Constantinople: %v Petersburg: %v Istanbul: %v, Muir Glacier: %v, YOLO v2: %v, Abies: %v, Engine: %v}",
+	return fmt.Sprintf("{ChainID: %v Homestead: %v DAO: %v DAOSupport: %v EIP150: %v EIP155: %v EIP158: %v Byzantium: %v Constantinople: %v Petersburg: %v Istanbul: %v, Muir Glacier: %v, YOLO v2: %v, Abies: %v, Bellis: %v, Engine: %v}",
 		c.ChainID,
 		c.HomesteadBlock,
 		c.DAOForkBlock,
@@ -436,6 +461,7 @@ func (c *ChainConfig) String() string {
 		c.MuirGlacierBlock,
 		c.YoloV2Block,
 		c.AbiesBlock,
+		c.BellisBlock,
 		engine,
 	)
 }
@@ -510,6 +536,16 @@ func (c *ChainConfig) IsAbies(num *big.Int) bool {
 // IsOnAbies returns whether num is equal to the Abies fork block
 func (c *ChainConfig) IsOnAbies(num *big.Int) bool {
 	return configNumEqual(c.AbiesBlock, num)
+}
+
+// IsBellis returns whether num represents a block number after the Bellis fork
+func (c *ChainConfig) IsBellis(num *big.Int) bool {
+	return isForked(c.BellisBlock, num)
+}
+
+// IsOnBellis returns whether num is equal to the Bellis fork block
+func (c *ChainConfig) IsOnBellis(num *big.Int) bool {
+	return configNumEqual(c.BellisBlock, num)
 }
 
 // CheckCompatible checks whether scheduled fork transitions have been imported
@@ -622,6 +658,9 @@ func (c *ChainConfig) checkCompatible(newcfg *ChainConfig, head *big.Int) *Confi
 	}
 	if isForkIncompatible(c.AbiesBlock, newcfg.AbiesBlock, head) {
 		return newCompatError("abies fork block", c.AbiesBlock, newcfg.AbiesBlock)
+	}
+	if isForkIncompatible(c.BellisBlock, newcfg.BellisBlock, head) {
+		return newCompatError("bellis fork block", c.BellisBlock, newcfg.BellisBlock)
 	}
 	return nil
 }

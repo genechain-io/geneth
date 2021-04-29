@@ -239,6 +239,8 @@ func (g *Genesis) configOrDefault(ghash common.Hash) *params.ChainConfig {
 		return params.GeneChainConfig
 	case ghash == params.AdenineGenesisHash:
 		return params.AdenineChainConfig
+	case ghash == params.CytosineGenesisHash:
+		return params.CytosineChainConfig
 	case ghash == params.MainnetGenesisHash:
 		return params.MainnetChainConfig
 	case ghash == params.RopstenGenesisHash:
@@ -359,6 +361,19 @@ func DefaultAdenineGenesisBlock() *Genesis {
 		GasLimit:   0x280de80,
 		Difficulty: big.NewInt(1),
 		Alloc:      decodePreallocWithCode(adenineAllocData),
+	}
+}
+
+// DefaultCytosineGenesisBlock returns the Cytosine network genesis block.
+func DefaultCytosineGenesisBlock() *Genesis {
+	return &Genesis{
+		Config:     params.CytosineChainConfig,
+		Nonce:      0x07a81,
+		Timestamp:  0x607cffe4,
+		ExtraData:  hexutil.MustDecode("0x00000000000000000000000000000000000000000000000000000000000000005d31d629Aff153C804B0cC075d88F19933BdD753eB0f1ae1D217407731814A0D15769a6D47b0959b9337dEDBEF89Eb0304B486B025389B06c45A9a2C0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"),
+		GasLimit:   0x280de80,
+		Difficulty: big.NewInt(1),
+		Alloc:      decodePreallocWithCode(cytosineAllocData),
 	}
 }
 

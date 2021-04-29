@@ -42,6 +42,7 @@ var AppHelpFlagGroups = []flags.FlagGroup{
 			utils.NetworkIdFlag,
 			utils.GenenetFlag,
 			utils.AdenineFlag,
+			utils.CytosineFlag,
 			utils.MainnetFlag,
 			utils.GoerliFlag,
 			utils.RinkebyFlag,
