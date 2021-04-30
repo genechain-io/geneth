@@ -608,7 +608,7 @@ func (r *Ribose) trySendBlockReward(chain consensus.ChainHeaderReader, header *t
 	}
 
 	nonce := state.GetNonce(header.Coinbase)
-	msg := types.NewMessage(header.Coinbase, &systemcontracts.RiboseContractAddr, nonce, fee, math.MaxUint64, new(big.Int), data, true)
+	msg := types.NewMessage(header.Coinbase, &systemcontracts.RiboseContractAddr, nonce, fee, math.MaxUint64, new(big.Int), data, nil, true)
 
 	if _, err := executeMsg(msg, state, header, newChainContext(chain, r), r.chainConfig); err != nil {
 		return err
@@ -685,7 +685,7 @@ func (r *Ribose) initializeSystemContracts(chain consensus.ChainHeaderReader, he
 		}
 
 		nonce := state.GetNonce(header.Coinbase)
-		msg := types.NewMessage(header.Coinbase, &contract.addr, nonce, new(big.Int), math.MaxUint64, new(big.Int), data, true)
+		msg := types.NewMessage(header.Coinbase, &contract.addr, nonce, new(big.Int), math.MaxUint64, new(big.Int), data, nil, true)
 
 		if _, err := executeMsg(msg, state, header, newChainContext(chain, r), r.chainConfig); err != nil {
 			return err
@@ -731,7 +731,7 @@ func (r *Ribose) getSortedValidators(chain consensus.ChainHeaderReader, header *
 		return []common.Address{}, err
 	}
 
-	msg := types.NewMessage(header.Coinbase, &systemcontracts.RiboseContractAddr, 0, new(big.Int), math.MaxUint64, new(big.Int), data, false)
+	msg := types.NewMessage(header.Coinbase, &systemcontracts.RiboseContractAddr, 0, new(big.Int), math.MaxUint64, new(big.Int), data, nil, false)
 
 	// use parent
 	result, err := executeMsg(msg, statedb, parent, newChainContext(chain, r), r.chainConfig)
@@ -769,7 +769,7 @@ func (r *Ribose) updateValidators(vals []common.Address, chain consensus.ChainHe
 
 	// call contract
 	nonce := state.GetNonce(header.Coinbase)
-	msg := types.NewMessage(header.Coinbase, &systemcontracts.RiboseContractAddr, nonce, new(big.Int), math.MaxUint64, new(big.Int), data, true)
+	msg := types.NewMessage(header.Coinbase, &systemcontracts.RiboseContractAddr, nonce, new(big.Int), math.MaxUint64, new(big.Int), data, nil, true)
 	if _, err := executeMsg(msg, state, header, newChainContext(chain, r), r.chainConfig); err != nil {
 		log.Error("Can't update validators to contract", "err", err)
 		return err
@@ -789,7 +789,7 @@ func (r *Ribose) punishValidator(val common.Address, chain consensus.ChainHeader
 
 	// call contract
 	nonce := state.GetNonce(header.Coinbase)
-	msg := types.NewMessage(header.Coinbase, &systemcontracts.RiboseContractAddr, nonce, new(big.Int), math.MaxUint64, new(big.Int), data, true)
+	msg := types.NewMessage(header.Coinbase, &systemcontracts.RiboseContractAddr, nonce, new(big.Int), math.MaxUint64, new(big.Int), data, nil, true)
 	if _, err := executeMsg(msg, state, header, newChainContext(chain, r), r.chainConfig); err != nil {
 		log.Error("Can't punish validator", "err", err)
 		return err

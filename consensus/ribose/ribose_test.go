@@ -115,7 +115,7 @@ func ExecuteContract(chain *core.BlockChain, addr common.Address,
 		return nil, err
 	}
 
-	msg := types.NewMessage(addr, &systemcontracts.RiboseContractAddr, 0, new(big.Int), math.MaxUint64, new(big.Int), data, false)
+	msg := types.NewMessage(addr, &systemcontracts.RiboseContractAddr, 0, new(big.Int), math.MaxUint64, new(big.Int), data, nil, false)
 
 	// use parent
 	result, err := executeMsg(msg, statedb, header, newChainContext(chain, r), r.chainConfig)
