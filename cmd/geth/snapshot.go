@@ -57,6 +57,7 @@ var (
 				Category:  "MISCELLANEOUS COMMANDS",
 				Flags: []cli.Flag{
 					utils.DataDirFlag,
+					utils.AncientFlag,
 					utils.AdenineFlag,
 					utils.RopstenFlag,
 					utils.RinkebyFlag,
@@ -87,6 +88,7 @@ the trie clean cache with default directory will be deleted.
 				Category:  "MISCELLANEOUS COMMANDS",
 				Flags: []cli.Flag{
 					utils.DataDirFlag,
+					utils.AncientFlag,
 					utils.AdenineFlag,
 					utils.RopstenFlag,
 					utils.RinkebyFlag,
@@ -107,6 +109,7 @@ In other words, this command does the snapshot to trie conversion.
 				Category:  "MISCELLANEOUS COMMANDS",
 				Flags: []cli.Flag{
 					utils.DataDirFlag,
+					utils.AncientFlag,
 					utils.AdenineFlag,
 					utils.RopstenFlag,
 					utils.RinkebyFlag,
@@ -129,6 +132,7 @@ It's also usable without snapshot enabled.
 				Category:  "MISCELLANEOUS COMMANDS",
 				Flags: []cli.Flag{
 					utils.DataDirFlag,
+					utils.AncientFlag,
 					utils.AdenineFlag,
 					utils.RopstenFlag,
 					utils.RinkebyFlag,
@@ -152,10 +156,8 @@ func pruneState(ctx *cli.Context) error {
 	stack, config := makeConfigNode(ctx)
 	defer stack.Close()
 
-	chain, chaindb := utils.MakeChain(ctx, stack, true)
-	defer chaindb.Close()
-
-	pruner, err := pruner.NewPruner(chaindb, chain.CurrentBlock().Header(), stack.ResolvePath(""), stack.ResolvePath(config.Eth.TrieCleanCacheJournal), ctx.GlobalUint64(utils.BloomFilterSizeFlag.Name))
+	chaindb := utils.MakeChainDatabase(ctx, stack, false)
+	pruner, err := pruner.NewPruner(chaindb, stack.ResolvePath(""), stack.ResolvePath(config.Eth.TrieCleanCacheJournal), ctx.GlobalUint64(utils.BloomFilterSizeFlag.Name))
 	if err != nil {
 		log.Error("Failed to open snapshot tree", "error", err)
 		return err
@@ -183,10 +185,13 @@ func verifyState(ctx *cli.Context) error {
 	stack, _ := makeConfigNode(ctx)
 	defer stack.Close()
 
-	chain, chaindb := utils.MakeChain(ctx, stack, true)
-	defer chaindb.Close()
-
-	snaptree, err := snapshot.New(chaindb, trie.NewDatabase(chaindb), 256, chain.CurrentBlock().Root(), false, false, false)
+	chaindb := utils.MakeChainDatabase(ctx, stack, true)
+	headBlock := rawdb.ReadHeadBlock(chaindb)
+	if headBlock == nil {
+		log.Error("Failed to load head block")
+		return errors.New("no head block")
+	}
+	snaptree, err := snapshot.New(chaindb, trie.NewDatabase(chaindb), 256, headBlock.Root(), false, false, false)
 	if err != nil {
 		log.Error("Failed to open snapshot tree", "error", err)
 		return err
@@ -195,7 +200,7 @@ func verifyState(ctx *cli.Context) error {
 		log.Error("Too many arguments given")
 		return errors.New("too many arguments")
 	}
-	var root = chain.CurrentBlock().Root()
+	var root = headBlock.Root()
 	if ctx.NArg() == 1 {
 		root, err = parseRoot(ctx.Args()[0])
 		if err != nil {
@@ -218,18 +223,15 @@ func traverseState(ctx *cli.Context) error {
 	stack, _ := makeConfigNode(ctx)
 	defer stack.Close()
 
-	chain, chaindb := utils.MakeChain(ctx, stack, true)
-	defer chaindb.Close()
-
+	chaindb := utils.MakeChainDatabase(ctx, stack, true)
+	headBlock := rawdb.ReadHeadBlock(chaindb)
+	if headBlock == nil {
+		log.Error("Failed to load head block")
+		return errors.New("no head block")
+	}
 	if ctx.NArg() > 1 {
 		log.Error("Too many arguments given")
 		return errors.New("too many arguments")
-	}
-	// Use the HEAD root as the default
-	head := chain.CurrentBlock()
-	if head == nil {
-		log.Error("Head block is missing")
-		return errors.New("head block is missing")
 	}
 	var (
 		root common.Hash
@@ -243,8 +245,8 @@ func traverseState(ctx *cli.Context) error {
 		}
 		log.Info("Start traversing the state", "root", root)
 	} else {
-		root = head.Root()
-		log.Info("Start traversing the state", "root", root, "number", head.NumberU64())
+		root = headBlock.Root()
+		log.Info("Start traversing the state", "root", root, "number", headBlock.NumberU64())
 	}
 	triedb := trie.NewDatabase(chaindb)
 	t, err := trie.NewSecure(root, triedb)
@@ -311,18 +313,15 @@ func traverseRawState(ctx *cli.Context) error {
 	stack, _ := makeConfigNode(ctx)
 	defer stack.Close()
 
-	chain, chaindb := utils.MakeChain(ctx, stack, true)
-	defer chaindb.Close()
-
+	chaindb := utils.MakeChainDatabase(ctx, stack, true)
+	headBlock := rawdb.ReadHeadBlock(chaindb)
+	if headBlock == nil {
+		log.Error("Failed to load head block")
+		return errors.New("no head block")
+	}
 	if ctx.NArg() > 1 {
 		log.Error("Too many arguments given")
 		return errors.New("too many arguments")
-	}
-	// Use the HEAD root as the default
-	head := chain.CurrentBlock()
-	if head == nil {
-		log.Error("Head block is missing")
-		return errors.New("head block is missing")
 	}
 	var (
 		root common.Hash
@@ -336,8 +335,8 @@ func traverseRawState(ctx *cli.Context) error {
 		}
 		log.Info("Start traversing the state", "root", root)
 	} else {
-		root = head.Root()
-		log.Info("Start traversing the state", "root", root, "number", head.NumberU64())
+		root = headBlock.Root()
+		log.Info("Start traversing the state", "root", root, "number", headBlock.NumberU64())
 	}
 	triedb := trie.NewDatabase(chaindb)
 	t, err := trie.NewSecure(root, triedb)
