@@ -39,7 +39,6 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/enr"
 	"github.com/ethereum/go-ethereum/p2p/nat"
 	"github.com/ethereum/go-ethereum/p2p/netutil"
-	proxyproto "github.com/pires/go-proxyproto"
 )
 
 const (
@@ -832,7 +831,7 @@ func (srv *Server) listenLoop() {
 	srv.log.Debug("TCP listener up", "addr", srv.listener.Addr())
 
 	// Wrap listener in a proxyproto listener
-	proxyListener := &proxyproto.Listener{Listener: srv.listener}
+	// proxyListener := &proxyproto.Listener{Listener: srv.listener}
 
 	// The slots channel limits accepts of new connections.
 	tokens := defaultMaxPendingPeers
@@ -863,8 +862,8 @@ func (srv *Server) listenLoop() {
 			lastLog time.Time
 		)
 		for {
-			// fd, err = srv.listener.Accept()
-			fd, err = proxyListener.Accept()
+			fd, err = srv.listener.Accept()
+			// fd, err = proxyListener.Accept()
 			if netutil.IsTemporaryError(err) {
 				if time.Since(lastLog) > 1*time.Second {
 					srv.log.Debug("Temporary read error", "err", err)
