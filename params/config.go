@@ -92,6 +92,7 @@ var (
 		IstanbulBlock:       big.NewInt(0),
 		MuirGlacierBlock:    big.NewInt(0),
 		AbiesBlock:          big.NewInt(258800),
+		BellisBlock:         big.NewInt(546000),
 
 		Ribose: &RiboseConfig{
 			Period: 3,
@@ -114,6 +115,7 @@ var (
 		IstanbulBlock:       big.NewInt(0),
 		MuirGlacierBlock:    big.NewInt(0),
 		AbiesBlock:          big.NewInt(27000),
+		BellisBlock:         big.NewInt(85000),
 
 		Ribose: &RiboseConfig{
 			Period: 3,
