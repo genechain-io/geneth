@@ -36,7 +36,7 @@ func (cc *chainContext) GetHeader(hash common.Hash, number uint64) *types.Header
 func executeMsg(msg core.Message, state *state.StateDB, header *types.Header, chainContext core.ChainContext, chainConfig *params.ChainConfig) (ret []byte, err error) {
 	// Set gas price to zero
 	context := core.NewEVMBlockContext(header, chainContext, nil)
-	vmenv := vm.NewEVM(context, vm.TxContext{}, state, chainConfig, vm.Config{})
+	vmenv := vm.NewEVM(context, vm.TxContext{GasPrice: msg.GasPrice()}, state, chainConfig, vm.Config{})
 
 	ret, _, err = vmenv.Call(vm.AccountRef(msg.From()), *msg.To(), msg.Data(), msg.Gas(), msg.Value())
 
