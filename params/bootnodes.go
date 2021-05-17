@@ -19,16 +19,24 @@ package params
 import "github.com/ethereum/go-ethereum/common"
 
 // GenenetBootnodes are the enode URLs of the P2P bootstrap nodes running on the
-var GenenetBootnodes = []string{}
+// main genenet network.
+var GenenetBootnodes = []string{
+	"enode://1b6712b83515a659112802838641e686b6d4092255feb939b4b2738100e873e28f30a61146a67012723818f3b6c9aa3f705e4f95d4b9a8993ac17ef735b7b24c@54.69.23.164:30303",
+	"enode://11ae847ce4f54fcc96da31a1b66c763620f57d74bf276458dbdcdc39b8174e2e487434f324123c50edb3cfb28090b1b7c9445a6f7a33655788287d538a41e4c9@54.168.176.126:30303",
+	"enode://67efa5a816d96df1020b77098b21078bd150b334a6728468da3deed91b2871bb38868555d3547284ebe18d55e37e8fb1251cb4eb1b1657c974f13bbb887455c6@13.228.87.236:30303",
+	"enode://f8cf56ce2095e4a1b9283d846b9dc62b464c1fdf229d90880fd8ebc9f95b820e59e28f8bb1a7c5e9a634c19fe5d4847e1b6da38077b4668289339d3dfd848a9e@3.0.67.194:30303",
+}
 
 var GenenetV5Bootnodes = []string{}
 
 // AdenineBootnodes are the enode URLs of the P2P bootstrap nodes running on the
+// Adenine test network.
 var AdenineBootnodes = []string{
 	"enode://b84fa3855a4fec46bfb0cff7222d0e8a2f3d8aac3fac5849314b6f28f89361255f1a1b02413842cf364bb36d37c8b7de52dd5b12acebcc6f24810e59ddf314bd@18.139.118.116:30303",
 }
 
-// CytosineBootnodes are the enode URLs of the P2P bootstrap nodes running on the
+// CytosineBootnodes are the enode URLs of the P2P bootstrap nodes running on
+// the Cytosine test network.
 var CytosineBootnodes = []string{}
 
 // MainnetBootnodes are the enode URLs of the P2P bootstrap nodes running on
