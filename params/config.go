@@ -27,9 +27,9 @@ import (
 
 // Genesis hashes to enforce below configs on.
 var (
-	GenenetGenesisHash  = common.HexToHash("0x1a95e2cb0f789428e062bc78d591cbb51b9d4afeec398c973ccbe8c17df453f4")
+	GenenetGenesisHash  = common.HexToHash("0x53fc7d1c074748a6f5ff1b3b7647a7800c7dc84e4f9694fc3e41103c209d5b72")
 	AdenineGenesisHash  = common.HexToHash("0xb47f3c3d4207b72c0cd377486207875cd4cc110911638dc4fd3903ffb3884109")
-	CytosineGenesisHash = common.HexToHash("0x6fb683fefd6046cf64a3a668d6aafc387d636a0ba60168f570791baa105b33e0")
+	CytosineGenesisHash = common.HexToHash("0xdb296edfee690d51e405fa52a1cebbcc08a7c6c79d6d14e4c9f2d530f45381fe")
 	MainnetGenesisHash  = common.HexToHash("0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3")
 	RopstenGenesisHash  = common.HexToHash("0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d")
 	RinkebyGenesisHash  = common.HexToHash("0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177")
@@ -114,8 +114,6 @@ var (
 		PetersburgBlock:     big.NewInt(0),
 		IstanbulBlock:       big.NewInt(0),
 		MuirGlacierBlock:    big.NewInt(0),
-		AbiesBlock:          big.NewInt(27000),
-		BellisBlock:         big.NewInt(85000),
 
 		Ribose: &RiboseConfig{
 			Period: 3,
