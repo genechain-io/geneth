@@ -32,6 +32,24 @@ with an upper limit of 21.
 Nodes responsible for producing and packaging blocks for transactions on the
 chain.
 
+## Docker quick start
+Docker image of geneth is now available on
+https://hub.docker.com/r/genechain/geneth. You can get GeneChain up and running
+on your machine with the following command.
+
+```
+docker run -d --name genechain-node -v /Users/alice/genechain:/root \
+           -p 8545:8545 -p 30303:30303 \
+           genechain/geneth
+```
+
+Remember to replace `/Users/alice/genechain` with a path to the folder where you
+want your blockchain to be stored.
+
+If you want to access RPC from other containers and/or hosts, append
+`--http.addr 0.0.0.0` to the docker command. More on running `geneth` can be
+found in [Running geneth](#running-geneth).
+
 ## Building the source
 
 Building `geneth` requires both a Go (version 1.13 or later) and a C compiler. You can install
