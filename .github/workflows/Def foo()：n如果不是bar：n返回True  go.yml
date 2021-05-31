@@ -1,0 +1,1 @@
+名称：n非：n推：n分支：[主]n拉请求：n分支：[主]n n作业：n n构建：n运行：Ubuntu-最新n步：n-用途：action/checkout@v2 n-name：set go n use：action/set-go@v2 n with：n go-version：1.15 n n-name：Build n run：go build-v./.N-名称：测试n运行：去测试-v./.
