@@ -135,7 +135,7 @@ func TestInitSystemContract(t *testing.T) {
 			tx := block.Transaction(receipt.TxHash)
 			txJSON, _ := json.MarshalIndent(tx, "", "  ")
 			receiptJSON, _ := json.MarshalIndent(receipt, "", "  ")
-			msg, err := tx.AsMessage(types.HomesteadSigner{})
+			msg, err := tx.AsMessage(types.HomesteadSigner{}, nil)
 			assert.NoError(t, err)
 			assert.Equal(t, types.ReceiptStatusSuccessful, receipt.Status, "%v,%s,%s", msg.From(), txJSON, receiptJSON)
 		}
@@ -243,7 +243,7 @@ func testRegisterSigners(t *testing.T, signers Signers) {
 			tx := block.Transaction(receipt.TxHash)
 			txJSON, _ := json.MarshalIndent(tx, "", "  ")
 			receiptJSON, _ := json.MarshalIndent(receipt, "", "  ")
-			msg, err := tx.AsMessage(types.HomesteadSigner{})
+			msg, err := tx.AsMessage(types.HomesteadSigner{}, nil)
 			assert.NoError(t, err)
 			if msg.From() == defaultSigner.addr { // Only the default signer can stake successfully
 				assert.Equal(t, types.ReceiptStatusSuccessful, receipt.Status, "%v,%s,%s", msg.From(), txJSON, receiptJSON)
@@ -269,7 +269,7 @@ func testRegisterSigners(t *testing.T, signers Signers) {
 			tx := block.Transaction(receipt.TxHash)
 			txJSON, _ := json.MarshalIndent(tx, "", "  ")
 			receiptJSON, _ := json.MarshalIndent(receipt, "", "  ")
-			msg, err := tx.AsMessage(types.HomesteadSigner{})
+			msg, err := tx.AsMessage(types.HomesteadSigner{}, nil)
 			assert.NoError(t, err)
 			if msg.From() == defaultSigner.addr { // The default signer is already registered
 				assert.Equal(t, types.ReceiptStatusFailed, receipt.Status, "%v,%s,%s", msg.From(), txJSON, receiptJSON)
@@ -322,7 +322,7 @@ func testRegisterSigners(t *testing.T, signers Signers) {
 			tx := block.Transaction(receipt.TxHash)
 			txJSON, _ := json.MarshalIndent(tx, "", "  ")
 			receiptJSON, _ := json.MarshalIndent(receipt, "", "  ")
-			msg, err := tx.AsMessage(types.HomesteadSigner{})
+			msg, err := tx.AsMessage(types.HomesteadSigner{}, nil)
 			assert.NoError(t, err)
 			assert.Equal(t, types.ReceiptStatusSuccessful, receipt.Status, "%v,%s,%s", msg.From(), txJSON, receiptJSON)
 		}

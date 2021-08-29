@@ -8,14 +8,19 @@ import (
 	"github.com/ethereum/go-ethereum/consensus/ribose"
 	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/systemcontracts"
-	"github.com/ethereum/go-ethereum/params"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestUpgrade(t *testing.T) {
 	genspec := ribose.NewTestGenesisBlock(t)
-	systemcontracts.AbiesUpgrade.Networks[genspec.Config.ChainID.String()] =
-		systemcontracts.AbiesUpgrade.Networks[params.AdenineChainConfig.ChainID.String()]
+	systemcontracts.AbiesUpgrade.Networks[genspec.Config.ChainID.String()] = &systemcontracts.Upgrades{
+		systemcontracts.RiboseContractAddr: {
+			Code: "0000",
+		},
+		systemcontracts.ARMContractAddr: {
+			Code: "1111",
+		},
+	}
 	tester := buildEthereumInstance(t)
 	defer tester.close()
 	db := tester.ethereum.ChainDb()

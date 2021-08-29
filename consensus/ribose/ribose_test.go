@@ -115,7 +115,7 @@ func ExecuteContract(chain *core.BlockChain, addr common.Address,
 		return nil, err
 	}
 
-	msg := types.NewMessage(addr, &systemcontracts.RiboseContractAddr, 0, new(big.Int), math.MaxUint64, new(big.Int), data, nil, false)
+	msg := types.NewMessage(addr, &systemcontracts.RiboseContractAddr, 0, new(big.Int), math.MaxUint64, new(big.Int), new(big.Int), new(big.Int), data, nil, false)
 
 	// use parent
 	result, err := executeMsg(msg, statedb, header, newChainContext(chain, r), r.chainConfig)
@@ -152,7 +152,7 @@ func CallContract(t *testing.T, chain *core.BlockChain, ethAPI *ethapi.PublicBlo
 
 	msgData := (hexutil.Bytes)(data)
 	gas := (hexutil.Uint64)(uint64(math.MaxUint64 / 2))
-	result, err := ethAPI.Call(ctx, ethapi.CallArgs{
+	result, err := ethAPI.Call(ctx, ethapi.TransactionArgs{
 		Gas:  &gas,
 		To:   &systemcontracts.RiboseContractAddr,
 		Data: &msgData,
