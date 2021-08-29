@@ -140,8 +140,6 @@ func remoteConsole(ctx *cli.Context) error {
 				path = filepath.Join(path, "rinkeby")
 			} else if ctx.GlobalBool(utils.GoerliFlag.Name) {
 				path = filepath.Join(path, "goerli")
-			} else if ctx.GlobalBool(utils.YoloV3Flag.Name) {
-				path = filepath.Join(path, "yolo-v3")
 			}
 		}
 		endpoint = fmt.Sprintf("%s/geneth.ipc", path)
@@ -177,7 +175,7 @@ func remoteConsole(ctx *cli.Context) error {
 
 // dialRPC returns a RPC client which connects to the given endpoint.
 // The check for empty endpoint implements the defaulting logic
-// for "geneth attach" and "geneth monitor" with no argument.
+// for "geneth attach" with no argument.
 func dialRPC(endpoint string) (*rpc.Client, error) {
 	if endpoint == "" {
 		endpoint = node.DefaultIPCEndpoint(clientIdentifier)

@@ -69,13 +69,28 @@ make geneth-all
 
 All possible command line flags can be found through `geneth --help` for command line options.
 
-### Full node on the main Ethereum network
+### Full node on the main network
 
-Comming soon
+Running a full node on the main network is as simple as running
+
+```shell
+$ geneth console
+```
+
+This command will:
+ * Start `geth` in snap sync mode (default, can be changed with the `--syncmode` flag),
+   causing it to download more data in exchange for avoiding processing the entire history
+   of the GeneChain main network, which is very CPU intensive.
+ * Start up `geneth`'s built-in interactive JavaScript console
+   (via the trailing `console` subcommand) through which you can interact using [`web3` methods](https://web3js.readthedocs.io/en/) 
+   (note: the `web3` version bundled within `geth` is very old, and not up to date with official docs),
+   as well as `geneth`'s own management APIs.
+   This tool is optional and if you leave it out you can always attach to an already running
+   `geneth` instance with `geneth attach`.
 
 ### A Full node on the Adenine test network
 
-Running a full node on the Adenine test network is as simple as running
+Running a full node on the Adenine test network similar to main network except the `--adenine` flag.
 
 ```shell
 $ geneth --adenine console
