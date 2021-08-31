@@ -1,6 +1,6 @@
 {
   "config": {
-    "chainId": 8080,
+    "chainId": 1337,
     "homesteadBlock": 0,
     "eip150Block": 0,
     "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -11,7 +11,7 @@
     "petersburgBlock": 0,
     "istanbulBlock": 0,
     "muirGlacierBlock": 0,
-    "abiesBlock":100,
+    "abiesBlock": 100,
     "ribose": {
       "period": 3,
       "epoch": 200

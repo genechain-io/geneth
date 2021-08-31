@@ -368,6 +368,30 @@ func GenenetGenesisBlock() *Genesis {
 	}
 }
 
+// DeveloperRiboseGenesisBlock returns the 'geth --dev.ribose' genesis block.
+func DeveloperRiboseGenesisBlock(period uint64, validators []common.Address) *Genesis {
+	// Override the default period to the user requested one
+	config := *params.AllRiboseProtocolChanges
+	config.Ribose.Period = period
+
+	var binaryValidators []byte
+	allocData := make(GenesisAlloc)
+	balance := new(big.Int).Div(new(big.Int).Lsh(big.NewInt(1), 256), big.NewInt(int64(len(validators))))
+	for _, validator := range validators {
+		binaryValidators = append(binaryValidators, validator[:]...)
+		allocData[validator] = GenesisAccount{Balance: balance}
+	}
+
+	// Assemble and return the genesis with the precompiles and faucet pre-funded
+	return &Genesis{
+		Config:     &config,
+		ExtraData:  append(append(make([]byte, 32), binaryValidators...), make([]byte, crypto.SignatureLength)...),
+		GasLimit:   11500000,
+		Difficulty: big.NewInt(1),
+		Alloc:      allocData,
+	}
+}
+
 // DefaultAdenineGenesisBlock returns the Adenine network genesis block.
 func DefaultAdenineGenesisBlock() *Genesis {
 	return &Genesis{

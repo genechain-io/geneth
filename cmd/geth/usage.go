@@ -31,7 +31,7 @@ import (
 // AppHelpFlagGroups is the application flags, grouped by functionality.
 var AppHelpFlagGroups = []flags.FlagGroup{
 	{
-		Name: "ETHEREUM",
+		Name: "NODE",
 		Flags: []cli.Flag{
 			configFileFlag,
 			utils.DataDirFlag,
@@ -44,10 +44,6 @@ var AppHelpFlagGroups = []flags.FlagGroup{
 			utils.GenenetFlag,
 			utils.AdenineFlag,
 			utils.CytosineFlag,
-			utils.MainnetFlag,
-			utils.GoerliFlag,
-			utils.RinkebyFlag,
-			utils.RopstenFlag,
 			utils.SyncModeFlag,
 			utils.ExitWhenSyncedFlag,
 			utils.GCModeFlag,
@@ -75,6 +71,8 @@ var AppHelpFlagGroups = []flags.FlagGroup{
 	{
 		Name: "DEVELOPER CHAIN",
 		Flags: []cli.Flag{
+			utils.DeveloperRiboseFlag,
+			utils.DeveloperRiboseValidatorsFlag,
 			utils.DeveloperFlag,
 			utils.DeveloperPeriodFlag,
 		},

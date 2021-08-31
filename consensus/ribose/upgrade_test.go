@@ -13,6 +13,8 @@ import (
 
 func TestUpgrade(t *testing.T) {
 	genspec := ribose.NewTestGenesisBlock(t)
+	abiesBlock := genspec.Config.AbiesBlock.Int64()
+	assert.NotZero(t, abiesBlock)
 	systemcontracts.AbiesUpgrade.Networks[genspec.Config.ChainID.String()] = &systemcontracts.Upgrades{
 		systemcontracts.RiboseContractAddr: {
 			Code: "0000",
@@ -33,7 +35,7 @@ func TestUpgrade(t *testing.T) {
 		assert.NotZero(t, bytes.Compare(expectCode, code))
 	}
 
-	buildBlocks(t, tester, 100, nil, nil, nil, nil)
+	buildBlocks(t, tester, int(abiesBlock), nil, nil, nil, nil)
 	{
 		statedb, err := state.New(tester.ethereum.BlockChain().CurrentBlock().Root(), state.NewDatabase(db), nil)
 		assert.NoError(t, err)

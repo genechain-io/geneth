@@ -144,6 +144,14 @@ var (
 		Name:  "genenet",
 		Usage: "Genechain main network",
 	}
+	DeveloperRiboseFlag = cli.BoolFlag{
+		Name:  "dev.ribose",
+		Usage: "Ephemeral proof-of-stake-authority network with a pre-funded developer account, mining enabled",
+	}
+	DeveloperRiboseValidatorsFlag = cli.StringFlag{
+		Name:  "dev.ribose.validators",
+		Usage: "Comma separated accounts to use as ribose validators in developer mode",
+	}
 	AdenineFlag = cli.BoolFlag{
 		Name:  "adenine",
 		Usage: "Adenine network: pre-configured DPoS test network.",
@@ -1293,7 +1301,7 @@ func setDataDir(ctx *cli.Context, cfg *node.Config) {
 	switch {
 	case ctx.GlobalIsSet(DataDirFlag.Name):
 		cfg.DataDir = ctx.GlobalString(DataDirFlag.Name)
-	case ctx.GlobalBool(DeveloperFlag.Name):
+	case ctx.GlobalBool(DeveloperFlag.Name) || ctx.GlobalBool((DeveloperRiboseFlag.Name)):
 		cfg.DataDir = "" // unless explicitly requested, use memory databases
 	case ctx.GlobalBool(AdenineFlag.Name) && cfg.DataDir == node.DefaultDataDir():
 		cfg.DataDir = filepath.Join(node.DefaultDataDir(), "adenine")
@@ -1500,9 +1508,9 @@ func CheckExclusive(ctx *cli.Context, args ...interface{}) {
 // SetEthConfig applies eth-related command line flags to the config.
 func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 	// Avoid conflicting network flags
-	CheckExclusive(ctx, GenenetFlag, AdenineFlag, CytosineFlag, MainnetFlag, DeveloperFlag, RopstenFlag, RinkebyFlag, GoerliFlag)
+	CheckExclusive(ctx, GenenetFlag, DeveloperRiboseFlag, AdenineFlag, CytosineFlag, MainnetFlag, DeveloperFlag, RopstenFlag, RinkebyFlag, GoerliFlag)
 	CheckExclusive(ctx, LightServeFlag, SyncModeFlag, "light")
-	CheckExclusive(ctx, DeveloperFlag, ExternalSignerFlag) // Can't use both ephemeral unlocked and external signer
+	CheckExclusive(ctx, DeveloperRiboseFlag, DeveloperFlag, ExternalSignerFlag) // Can't use both ephemeral unlocked and external signer
 	if ctx.GlobalString(GCModeFlag.Name) == "archive" && ctx.GlobalUint64(TxLookupLimitFlag.Name) != 0 {
 		ctx.GlobalSet(TxLookupLimitFlag.Name, "0")
 		log.Warn("Disable transaction unindexing for archive node")
@@ -1671,7 +1679,7 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 		}
 		cfg.Genesis = core.DefaultGoerliGenesisBlock()
 		SetDNSDiscoveryDefaults(cfg, params.GoerliGenesisHash)
-	case ctx.GlobalBool(DeveloperFlag.Name):
+	case ctx.GlobalBool(DeveloperFlag.Name) || ctx.GlobalBool(DeveloperRiboseFlag.Name):
 		if !ctx.GlobalIsSet(NetworkIdFlag.Name) {
 			cfg.NetworkId = 1337
 		}
@@ -1705,7 +1713,24 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 		log.Info("Using developer account", "address", developer.Address)
 
 		// Create a new developer genesis block or reuse existing one
-		cfg.Genesis = core.DeveloperGenesisBlock(uint64(ctx.GlobalInt(DeveloperPeriodFlag.Name)), developer.Address)
+		if ctx.GlobalBool(DeveloperRiboseFlag.Name) {
+			var validators []common.Address
+			if ctx.GlobalIsSet(DeveloperRiboseValidatorsFlag.Name) {
+				vals := strings.Split(ctx.GlobalString(DeveloperRiboseValidatorsFlag.Name), ",")
+				for _, account := range vals {
+					if trimmed := strings.TrimSpace(account); !common.IsHexAddress(trimmed) {
+						Fatalf("Invalid account in --dev.ribose.validators: %s", trimmed)
+					} else {
+						validators = append(validators, common.HexToAddress(account))
+					}
+				}
+			} else {
+				Fatalf("Validators not specified with --dev.ribose.validators")
+			}
+			cfg.Genesis = core.DeveloperRiboseGenesisBlock(uint64(ctx.GlobalInt(DeveloperPeriodFlag.Name)), validators)
+		} else {
+			cfg.Genesis = core.DeveloperGenesisBlock(uint64(ctx.GlobalInt(DeveloperPeriodFlag.Name)), developer.Address)
+		}
 		if ctx.GlobalIsSet(DataDirFlag.Name) {
 			// Check if we have an already initialized chain and fall back to
 			// that if so. Otherwise we need to generate a new genesis spec.
@@ -1900,7 +1925,7 @@ func MakeGenesis(ctx *cli.Context) *core.Genesis {
 		genesis = core.DefaultRinkebyGenesisBlock()
 	case ctx.GlobalBool(GoerliFlag.Name):
 		genesis = core.DefaultGoerliGenesisBlock()
-	case ctx.GlobalBool(DeveloperFlag.Name):
+	case ctx.GlobalBool(DeveloperFlag.Name) || ctx.GlobalBool(DeveloperRiboseFlag.Name):
 		Fatalf("Developer chains are ephemeral")
 	}
 	return genesis

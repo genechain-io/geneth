@@ -1,0 +1,129 @@
+version: "3.7"
+
+services:
+  validator-1:
+    build: .
+    container_name: validator-1
+    profiles:
+      - dev
+    networks:
+      genechain:
+        ipv4_address: 10.1.0.101
+    volumes:
+      - ./consensus/ribose/testdata/validator-1:/opt/validator
+      - ./consensus/ribose/testdata/validator-password:/opt/validator-password
+    command:
+      - --dev.ribose
+      - --dev.ribose.validators
+      - 5bb5fd822436db4cbc749bdede853257ef74f5d9,c03d97fb89a19af84f7024407bf73c1894201885,d6b5c3984ac31196379bb084a642ada4b8b07ba7
+      - --dev.period
+      - "3"
+      - --syncmode
+      - full
+      - --keystore
+      - /opt/
+      - --unlock
+      - 5bb5fd822436db4cbc749bdede853257ef74f5d9
+      - --mine
+      - --password
+      - /opt/validator-password
+      - --netrestrict
+      - 10.0.0.0/8
+      - --nodekeyhex
+      - 642e4a3ee1d70fe1c10e7783066d3df561a66bcb5958c8b24edba556ab038852
+      - --bootnodes
+      - enode://4d57c6a8e99448ffe2df3a0e08a1b1a1f58fe4a37183ff0adff86f19ac23641a953a11e947c890527f818c8beb497b5cf316280cade48c3a90633cb699e5eaf8@10.1.0.101:30303,enode://5717bf9b59669f8f037956117b2a86c039c3ff37cb93ffa46cd3b0e023c61b75795a87c85bb678b557ae59ec1c6516d0bcbb9608e79254c0019468594a34a0b7@10.1.0.102:30303,enode://f4960671e3a4b0ff63cc60c2b2664bd8ccdb657383e45edbd629ecc63a2dda92da8b2f90b77b9c3d645c8989570d04b6ccb26fb81e3eb9b571b3e029ce41d9bd@10.1.0.103:30303
+
+  validator-2:
+    build: .
+    container_name: validator-2
+    profiles:
+      - dev
+    networks:
+      genechain:
+        ipv4_address: 10.1.0.102
+    volumes:
+      - ./consensus/ribose/testdata/validator-2:/opt/validator
+      - ./consensus/ribose/testdata/validator-password:/opt/validator-password
+    command:
+      - --dev.ribose
+      - --dev.ribose.validators
+      - 5bb5fd822436db4cbc749bdede853257ef74f5d9,c03d97fb89a19af84f7024407bf73c1894201885,d6b5c3984ac31196379bb084a642ada4b8b07ba7
+      - --dev.period
+      - "3"
+      - --syncmode
+      - full
+      - --keystore
+      - /opt/
+      - --unlock
+      - d6b5c3984ac31196379bb084a642ada4b8b07ba7
+      - --mine
+      - --password
+      - /opt/validator-password
+      - --netrestrict
+      - 10.0.0.0/8
+      - --nodekeyhex
+      - 4d1d4af2818172d76e044754121a22ae6777639c6a013ac23c5651b5ad6dd398
+      - --bootnodes
+      - enode://4d57c6a8e99448ffe2df3a0e08a1b1a1f58fe4a37183ff0adff86f19ac23641a953a11e947c890527f818c8beb497b5cf316280cade48c3a90633cb699e5eaf8@10.1.0.101:30303,enode://5717bf9b59669f8f037956117b2a86c039c3ff37cb93ffa46cd3b0e023c61b75795a87c85bb678b557ae59ec1c6516d0bcbb9608e79254c0019468594a34a0b7@10.1.0.102:30303,enode://f4960671e3a4b0ff63cc60c2b2664bd8ccdb657383e45edbd629ecc63a2dda92da8b2f90b77b9c3d645c8989570d04b6ccb26fb81e3eb9b571b3e029ce41d9bd@10.1.0.103:30303
+
+  validator-3:
+    build: .
+    container_name: validator-3
+    profiles:
+      - dev
+    networks:
+      genechain:
+        ipv4_address: 10.1.0.103
+    volumes:
+      - ./consensus/ribose/testdata/validator-3:/opt/validator
+      - ./consensus/ribose/testdata/validator-password:/opt/validator-password
+    command:
+      - --dev.ribose
+      - --dev.ribose.validators
+      - 5bb5fd822436db4cbc749bdede853257ef74f5d9,c03d97fb89a19af84f7024407bf73c1894201885,d6b5c3984ac31196379bb084a642ada4b8b07ba7
+      - --dev.period
+      - "3"
+      - --syncmode
+      - full
+      - --keystore
+      - /opt/
+      - --unlock
+      - c03d97fb89a19af84f7024407bf73c1894201885
+      - --mine
+      - --password
+      - /opt/validator-password
+      - --netrestrict
+      - 10.0.0.0/8
+      - --nodekeyhex
+      - 78db87b9acc6bc9b93fd1eaf58d7a1a1e3c7a24af6604f7f57a72cc91f8f8849
+      - --bootnodes
+      - enode://4d57c6a8e99448ffe2df3a0e08a1b1a1f58fe4a37183ff0adff86f19ac23641a953a11e947c890527f818c8beb497b5cf316280cade48c3a90633cb699e5eaf8@10.1.0.101:30303,enode://5717bf9b59669f8f037956117b2a86c039c3ff37cb93ffa46cd3b0e023c61b75795a87c85bb678b557ae59ec1c6516d0bcbb9608e79254c0019468594a34a0b7@10.1.0.102:30303,enode://f4960671e3a4b0ff63cc60c2b2664bd8ccdb657383e45edbd629ecc63a2dda92da8b2f90b77b9c3d645c8989570d04b6ccb26fb81e3eb9b571b3e029ce41d9bd@10.1.0.103:30303
+
+  rpc:
+    build: .
+    container_name: rpc
+    profiles:
+      - dev
+    networks:
+      genechain:
+    ports:
+      - "8545:8545"
+    command:
+      - --dev.ribose
+      - --dev.ribose.validators
+      - 5bb5fd822436db4cbc749bdede853257ef74f5d9,c03d97fb89a19af84f7024407bf73c1894201885,d6b5c3984ac31196379bb084a642ada4b8b07ba7
+      - --dev.period
+      - "3"
+      - --bootnodes
+      - enode://4d57c6a8e99448ffe2df3a0e08a1b1a1f58fe4a37183ff0adff86f19ac23641a953a11e947c890527f818c8beb497b5cf316280cade48c3a90633cb699e5eaf8@10.1.0.101:30303,enode://5717bf9b59669f8f037956117b2a86c039c3ff37cb93ffa46cd3b0e023c61b75795a87c85bb678b557ae59ec1c6516d0bcbb9608e79254c0019468594a34a0b7@10.1.0.102:30303,enode://f4960671e3a4b0ff63cc60c2b2664bd8ccdb657383e45edbd629ecc63a2dda92da8b2f90b77b9c3d645c8989570d04b6ccb26fb81e3eb9b571b3e029ce41d9bd@10.1.0.103:30303
+      - --http
+      - --http.addr
+      - 0.0.0.0
+
+networks:
+  genechain:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.1.0.0/24
