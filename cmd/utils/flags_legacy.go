@@ -35,6 +35,11 @@ var ShowDeprecated = cli.Command{
 }
 
 var DeprecatedFlags = []cli.Flag{
+	MainnetFlag,
+	GoerliFlag,
+	RinkebyFlag,
+	YoloV2Flag,
+	RopstenFlag,
 	LegacyTestnetFlag,
 	LegacyLightServFlag,
 	LegacyLightPeersFlag,
